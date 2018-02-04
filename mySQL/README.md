@@ -34,20 +34,12 @@ endo pip install mysql-python
 ```
 connect：mysql -u seniordesign -p -h den1.mysql5.gear.host
 password：00000！
-```
-```
 show databases;
-```
-```
 use seniordesign;
-```
-```
 show tables;
-```
-```
 select * from emr；
 ```
-Don't forget to type ';' before return.
+*Don't forget to type ';' before return.*
 
 Or see more on:
 * [W3Schools](https://www.w3schools.com/sql/default.asp)
