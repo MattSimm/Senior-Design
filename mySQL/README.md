@@ -39,7 +39,7 @@ use seniordesign;
 show tables;
 select * from emr；
 ```
-*Don't forget to type ';' before return.*
+**Don't forget to type ';' before return.**
 
 Or see more on:
 * [W3Schools](https://www.w3schools.com/sql/default.asp)
