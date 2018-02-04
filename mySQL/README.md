@@ -25,7 +25,7 @@ pip install mysql-python
 if permission denind, try this:
 
 ```
-endo pip install mysql-python
+sudo pip install mysql-python
 ```
 
 ### 3. This is for python 2.7 version, run it through mac defautly.
