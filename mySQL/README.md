@@ -33,8 +33,6 @@ endo pip install mysql-python
 ## Here is the cheatsheet to mysql 
 ```
 connect：mysql -u seniordesign -p -h den1.mysql5.gear.host
-```
-```
 password：00000！
 ```
 ```
@@ -49,8 +47,8 @@ show tables;
 ```
 select * from emr；
 ```
+Don't forget to type ';' before return.
 
 Or see more on:
 * [W3Schools](https://www.w3schools.com/sql/default.asp)
 * [My simply MySQL Command Line Cheatsheet](https://gist.github.com/hofmannsven/9164408)
-Don't forget to type ';' before return.
