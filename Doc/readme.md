@@ -19,11 +19,11 @@ Connect with our EMR database, read a patients record when asked by controller, 
 
 
 # User Interaction in UI
-![](user-case-flow.png)
-The user of this software is a nurse at registration table or a doctor in the clinic, so the software is divided into two sections: [Personal information section] and [Diagnose information section].
+![avatar](user-case-flow.png)
+The user of this software is a nurse at registration table or a doctor in the clinic, so the software is divided into two sections: Personal information section] and [Diagnose information section].
 
 The whole interaction loop should be like this:
-# In personal information section:
+#### In personal information section:
 A patient goes to the registration table and ask a nurse to regist him. The nurese will ask if he is new to the hospital. 
 If new, nurse click new botton, UI call the controller to creat a new person information table base on the following conversation. The controller will give a parsed information back to the UI for confirmation. 
 	If correct, nurse click confirm button, UI call the controller to update the person's personal imformation to database. 
@@ -31,7 +31,7 @@ If new, nurse click new botton, UI call the controller to creat a new person inf
 If not new, the nurse click find botton, type in patient's name and call the controller to find all patients with this name. The controller will return a array of patients, nurse select the right one and confirm.
 The patient's id is kept for the next section, and process move to the next section.
 
-# In Diagnose information section:
+#### In Diagnose information section:
 UI call contorller to read all of the patient's information and present to doctor.
 The doctor press start, UI call the controller to construct the diagnose infromation base on the following conversation. The controller will give a parsed information back to the UI for confirmation. 
 	If correct, doctor click confirm button, UI call the controller to update the person's diagnose imformation to database. 
