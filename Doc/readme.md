@@ -19,7 +19,7 @@ Connect with our EMR database, read a patients record when asked by controller, 
 
 
 # User Interaction in UI
-![avatar](user-case-flow.png)
+![avatar](use-case-flow.png)
 The user of this software is a nurse at registration table or a doctor in the clinic, so the software is divided into two sections: Personal information section] and [Diagnose information section].
 
 The whole interaction loop should be like this:
