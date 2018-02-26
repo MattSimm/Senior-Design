@@ -48,7 +48,7 @@ class Controller:
 		# A dictionary like {'first_name':'Mary','last_name':'Sue'} is returned.
 		# Keep it and return it to UI for display.
 		paragraph = make_para()
-		p_info = pick_p_info()
+		p_info = pick_p_info(paragraph)
 		return p_info
 
 	def confirmed_p(p_id,confirmed_info):
@@ -65,7 +65,7 @@ class Controller:
 		# Keep it and return it to UI for display.
 		# Diagnose message parse is difficult, do this part in second iteration.
 		paragraph = make_para()
-		d_mess = pick_d_mess()
+		d_mess = pick_d_mess(paragraph)
 		return d_mess
 
 	def confirmed_d(p_id,confirmed_info):
