@@ -21,5 +21,5 @@ Connect with our EMR database, read a patients record when asked by controller, 
 # User Interaction in UI
 The user of this software is a nurse at registration table or a doctor in the clinic.
 The whole interaction loop should be like this:
-A patient go to the registration table and ask a nurse to regist him. The nurese will ask if he is new to the hospital. If new, nurse click new botton, UI call the controller to creat a new person information table base on the following conversation. The controller will give a parsed information back to the UI for confirmation. If correct, nurse click confirm button, UI call the controller to update the person's personal imformation.
+A patient go to the registration table and ask a nurse to regist him. The nurese will ask if he is new to the hospital. If new, nurse click new botton, UI call the controller to creat a new person information table base on the following conversation. The controller will give a parsed information back to the UI for confirmation. If correct, nurse click confirm button, UI call the controller to update the person's personal imformation. If not correct, nurse click edit button and edit the information by hand. After editing, the nurse click 
 
