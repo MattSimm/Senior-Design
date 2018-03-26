@@ -1,0 +1,49 @@
+import sklearn.datasets
+from sklearn.datasets import load_files
+import sklearn.metrics
+import sklearn.svm
+import sklearn.naive_bayes
+import numpy as np
+from sklearn.naive_bayes import MultinomialNB
+import sklearn.neighbors
+import sys, os, glob
+from pprint import pprint
+
+from sklearn.feature_extraction.text import CountVectorizer
+# vectorizer = CountVectorizer()
+# data_corpus = ["John likes to watch movies. Mary likes movies too.",
+# "John also likes to watch football games."]
+# X = vectorizer.fit_transform(data_corpus)
+# print(X.toarray())
+# print(vectorizer.get_feature_names())
+
+path = '/Users/mattsimmering/SeniorDesign/Senior-Design/dataset'
+files = sklearn.datasets.load_files(path, encoding = 'latin1', decode_error = 'replace', load_content=True, random_state=3)
+# print(files)
+count_vect = CountVectorizer()
+
+X_train_counts = count_vect.fit_transform(files.data)
+
+
+# print("Target")
+print(files)
+# print()
+# print((X_train_counts))
+clf = MultinomialNB()
+X = X_train_counts
+# pprint(files.values())
+Y = files["target"]
+# print(X.shape)
+# print(Y.shape)
+clf.fit(X, Y)
+print("Now doing test files")
+test_path = '/Users/mattsimmering/SeniorDesign/Senior-Design/testing'
+test_files = sklearn.datasets.load_files(test_path, encoding = 'latin1', load_content=True)
+
+print(test_files)
+X_test_counts = count_vect.transform(test_files.data)
+print(X_test_counts.shape)
+predicted = clf.predict_proba(X_test_counts)
+#
+print(clf.predict(X_test_counts))
+print(predicted)
