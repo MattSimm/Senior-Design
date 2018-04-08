@@ -37,34 +37,10 @@ def setup_classifier(training_path):
 	# pprint(files.values())
 
 	Y = files["target"]
-	# print(Y)
-	# print(X.shape)
-	# print(Y.shape)
+
 	h = clf.fit(X, Y)
 
-	# print("Now doing test files")
-	# test_path = '/Users/mattsimmering/SeniorDesign/Senior-Design/testing'
-	# test_files = sklearn.datasets.load_files(test_path, encoding='latin1', load_content=True)
-	#
-	# print(test_files)
-	# print(test_files)
-	#
-	# print("Fuck this shit")
-	# print((test_files.data))
-	#
-	# print("LLSKDJFLSDKJFKSDJLF")
-	# X_test_counts = count_vect.transform(test_files.data)
-	#
-	# print(X_test_counts)
-	# X_test_tfidf = tfidf_transformer.transform(X_test_counts)
-	# # print(X_test_tfidf.toarray())
-	# # print(X_test_counts.shape)
-	#
-	# predicted = clf.predict_proba(X_test_counts)
-	# #
-	# print(clf.predict(X_test_counts))
-	# print(predicted)
-	# print(h)
+
 	return clf, count_vect, list_categories
 
 
@@ -76,22 +52,10 @@ def predict_phrase(classifier, vectorizer, phrase):
 
 	print("Predicting the classification of: " + phrase)
 
-	# to_test = []
-	# to_test.append(phrase)
-	# to_test.append("this is a throwaway sentence")
-	# print(to_test)
+
 
 	print("Now doing test files")
-	# test_path = '/Users/mattsimmering/SeniorDesign/Senior-Design/testing'
-	# test_files = sklearn.datasets.load_files(test_path, encoding='latin1', load_content=True)
-	#
-	# print(test_files)
-	# print(test_files)
-	#
-	# print("Fuck this shit")
-	# print((test_files.data))
-	#
-	# print("LLSKDJFLSDKJFKSDJLF")
+
 	X_test_counts = vectorizer.transform([phrase])
 
 	# print(X_test_counts)
