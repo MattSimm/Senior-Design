@@ -162,3 +162,68 @@ bonePain_keys = ['bone', 'bones'] + pain_keys
 jointPain_keys = ['joint', 'joints', 'tendon', 'arthritis', 'tennis elbow'] + pain_keys
 
 musclePain_keys = ['muscle', 'muscles'] + pain_keys
+
+# History: Skin
+
+rashOrMole_keys = ['rash', 'irritation', 'skin', 'mole', 'breaking out', 'hives']
+
+skinItch_keys = ['skin', 'itch', 'itchy', 'scratch', 'scratchy']
+
+breastLump_keys = ['breast', 'lump', 'bump', 'growth', 'mass']
+
+breastPain_keys = ['breast'] + pain_keys
+
+nippleDischarge_keys = ['nipple', 'discharge', 'ooze', 'seeping']
+
+hairLoss_keys = ['hair', 'loss', 'losing', 'bald', 'balding']
+
+# History: Neurologic
+
+headache_keys = ['headache', 'head', 'migraine']
+
+muscleWeakness_keys = ['muscles', 'muscle', 'weak', 'fatigue', 'fatigued']
+
+sensationChanges_keys = ['numb', 'numbness', 'coldness', 'crawling', 'prickling', 'burning',
+						 'tingling', 'tickling', 'pins and needles']
+
+memoryLoss_keys = ['memory loss', 'forget', 'memory']
+
+seizure_keys = ['seizure', 'epiliepsy']
+
+dizziness_keys = ['light headed', 'room spinning', 'faint', 'fainting', 'imbalance', 'dizzy', 'dizziness',
+				  'fainted']
+
+# History: Psychiatric
+
+anxiety_keys = ['restless', 'nervous', 'nervousness', 'shaking', 'overwhelmed', 'shaky', 'dizzy', 'fear',
+				]
+
+sadness_keys = ['sad', 'depressed', 'down', 'unhappy', 'miserable']
+
+irritability_keys = ['irritable', 'irritated', 'on edge', 'annoyed', 'short temper', 'testy']
+
+insomnia_keys = ['insomnia', 'cant sleep', 'trouble sleeping']
+
+suicidal_keys = ['suicide', 'suicidal']
+
+# History: Endocrine
+
+heatAndColdIntolerance_keys = ['hot', 'cold', 'intolerable', 'uncomfortable']
+
+excessiveThirst_keys = ['thirsty' , 'constant', 'always thirsty', 'thrist']
+
+excessiveHunger_keys = ['hungry' , 'constant', 'always hungry', 'hunger']
+
+lymphNodeEnlargement_keys = ['lymph', 'lymph node', 'enlargement', 'big']
+
+easyBleedingAndBruising_keys = ['easy', 'bruise', 'bleeding']
+
+# History: Allergic or immunologic
+
+hives_keys = ['lesions', 'scratching', 'red', 'rash']
+
+seasonalAllergies_keys = ['seasonal', 'allergies', 'sneezing' ,'runny nose', 'watery eyes', 'itchy']
+
+hivExposure_keys = ['HIV', 'hiv']
+
+
