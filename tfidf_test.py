@@ -31,22 +31,33 @@ def Allergies_Parse(phrase):
 	print("Nlp part for Allergies:")
 	doc = nlp(phrase)
 	allergen = 'allergen'
+	keywords = []
 
-	allergen_flag = 1
+	keywords = []
 
-	for count, token in enumerate(doc):
-		# print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
-		if token.dep_ == 'pobj':
-			allergen = token
-			allergen_flag = 0
+	for token in doc:
+		if token.dep_ == 'dobj' or token.dep_ == 'pobj' and not token.is_stop:
+			keywords.append(token.text)
+		elif token.dep_ == 'nsubj' and token.pos_ == 'NOUN':
+			keywords.append(token.text)
 
-	if allergen_flag:
-		for token in doc:
-			if token.pos_ == 'NOUN' and token.dep_ == 'nsubj':
-				allergen = token
+	return keywords
 
 
-	return str(allergen)
+	# allergen_flag = 1
+	#
+	# for count, token in enumerate(doc):
+	# 	# print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
+	# 	if token.dep_ == 'pobj':
+	# 		allergen = token
+	# 		allergen_flag = 0
+	#
+	# if allergen_flag:
+	# 	for token in doc:
+	# 		if token.pos_ == 'NOUN' and token.dep_ == 'nsubj':
+	# 			allergen = token
+	#
+	# return str(allergen)
 
 
 
@@ -61,20 +72,30 @@ def Assessment_Parse(phrase):
 	condition = 'condition'
 	condition_flag = 1
 
-	for count, token in enumerate(doc):
-		if token.dep_ == 'dobj':
-			condition = token
-			condition_flag = 0
-		elif token.dep_ == 'pobj':
-			condition = token
-			condition_flag = 0
+	keywords = []
 
-	if condition_flag:
-		for token in doc:
-			if token.pos_ == 'NOUN' and token.dep_ == 'nsubj':
-				condition = token
+	for token in doc:
+		if not token.is_stop:
+			if token.dep_ == 'dobj' or token.dep_ == 'pobj':
+				keywords.append(token.text)
 
-	return str(condition)
+	return keywords
+
+	#
+	# for count, token in enumerate(doc):
+	# 	if token.dep_ == 'dobj':
+	# 		condition = token
+	# 		condition_flag = 0
+	# 	elif token.dep_ == 'pobj':
+	# 		condition = token
+	# 		condition_flag = 0
+	#
+	# if condition_flag:
+	# 	for token in doc:
+	# 		if token.pos_ == 'NOUN' and token.dep_ == 'nsubj':
+	# 			condition = token
+	#
+	# return str(condition)
 
 def FamilyHistory_Parse(phrase):
 	# We need to capture condtion and the family member
@@ -85,30 +106,37 @@ def FamilyHistory_Parse(phrase):
 	nlp = spacy.load('en')
 	doc = nlp(phrase)
 
+	keywords = []
 
+	for token in doc:
+		if not token.is_stop:
+			if token.dep_ == 'dobj' or token.dep_ == 'pobj' or token.dep_ == 'nsubj':
+				keywords.append(str(token))
+
+	return keywords
 	# # This is used to see if there is a family member from our list
 
-	condition = 'condition'
-	fam_relation = 'family relation'
-
-	fam_flag = 1
-	for word in doc:
-		if str(word) in FAMILY_LIST:
-			fam_flag = 0
-			fam_relation = word
-
-
-
-	# Family members tend to be the subject noun of the sentence
-	# The condition tends to be the direct object.
-	for count, token in enumerate(doc):
-		# print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
-		if token.dep_ == 'dobj':
-			condition = token
-		elif fam_flag == 1 and token.pos_ == 'NOUN' and token.dep_ == 'nsubj':
-			fam_relation = token
-
-	return str(condition), str(fam_relation)
+	# condition = 'condition'
+	# fam_relation = 'family relation'
+	#
+	# fam_flag = 1
+	# for word in doc:
+	# 	if str(word) in FAMILY_LIST:
+	# 		fam_flag = 0
+	# 		fam_relation = word
+	#
+	#
+	#
+	# # Family members tend to be the subject noun of the sentence
+	# # The condition tends to be the direct object.
+	# for count, token in enumerate(doc):
+	# 	# print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
+	# 	if token.dep_ == 'dobj':
+	# 		condition = token
+	# 	elif fam_flag == 1 and token.pos_ == 'NOUN' and token.dep_ == 'nsubj':
+	# 		fam_relation = token
+	#
+	# return str(condition), str(fam_relation)
 
 def HPI_Parse(phrase):
 	# Just get the conditions and symptoms from patient
@@ -120,28 +148,36 @@ def HPI_Parse(phrase):
 	condition = 'condition'
 	duration = 'duration'
 
+	keywords = []
 
-	for count, token in enumerate(doc):
-		# print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
-		if token.dep_ == 'dobj':
-			condition = token
-		if token.dep_ == 'pobj' and doc[count - 1].dep_ == 'prep':
-			condition = token
-		last_word = token
+	for token in doc:
+		if not token.is_stop:
+			if token.dep_ == 'dobj' or token.dep_ == 'pobj' or token.pos_ == 'ADJ':
+				keywords.append(token.text)
 
-	for ent in doc.ents:
-		# print(ent.text, ent.start_char, ent.end_char, ent.label_)
-		if ent.label_ == 'DATE':
-			duration = ent.label_
+	return keywords
+	#
+	# for count, token in enumerate(doc):
+	# 	# print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
+	# 	if token.dep_ == 'dobj':
+	# 		condition = token
+	# 	if token.dep_ == 'pobj' and doc[count - 1].dep_ == 'prep':
+	# 		condition = token
+	# 	last_word = token
+	#
+	# for ent in doc.ents:
+	# 	# print(ent.text, ent.start_char, ent.end_char, ent.label_)
+	# 	if ent.label_ == 'DATE':
+	# 		duration = ent.label_
 
-	if duration == 'duration' and condition == 'condition':
-		return
-	elif duration != 'duration' and condition == 'condition':
-		return duration
-	elif duration == 'duration' and condition != 'condition':
-		return condition
-	else:
-		return str(condition), str(duration)
+	# if str(duration) == 'duration' and str(condition) == 'condition':
+	# 	return
+	# elif str(duration) != 'duration' and str(condition) == 'condition':
+	# 	return str(duration)
+	# elif str(duration) == 'duration' and str(condition) != 'condition':
+	# 	return str(duration)
+	# else:
+	# 	return str(condition), str(duration)
 
 
 def MedicalHistory_Parse(phrase):
@@ -153,21 +189,29 @@ def MedicalHistory_Parse(phrase):
 	doc = nlp(phrase)
 	MedHis = 'Medical History'
 	compound_flag = 0
+	keywords = []
 
-	for count, token in enumerate(doc):
-		if count >= 1:
-			if doc[count -1].dep_ == 'compund' or doc[count -1].dep_ == 'nummound':
-				word = str(doc[count -1]) + " " + str(token)
-				compound_flag = 1
-			else:
-				compound_flag = 0
+	for token in doc:
+		if not token.is_stop:
+			if token.dep_ == 'dobj' or token.dep_ == 'pobj':
+				keywords.append(token.text)
 
-		if token.dep_ == 'dobj':
-			MedHis = word if compound_flag == 1 else token
-		if token.dep_ == 'pobj' and doc[count - 1].dep_ == 'prep':
-			MedHis = word if compound_flag == 1 else token
-
-	return str(MedHis)
+	return keywords
+	#
+	# for count, token in enumerate(doc):
+	# 	if count >= 1:
+	# 		if doc[count -1].dep_ == 'compund' or doc[count -1].dep_ == 'nummound':
+	# 			word = str(doc[count -1]) + " " + str(token)
+	# 			compound_flag = 1
+	# 		else:
+	# 			compound_flag = 0
+	#
+	# 	if token.dep_ == 'dobj':
+	# 		MedHis = word if compound_flag == 1 else token
+	# 	if token.dep_ == 'pobj' and doc[count - 1].dep_ == 'prep':
+	# 		MedHis = word if compound_flag == 1 else token
+	#
+	# return str(MedHis)
 
 def Medications_Parse(phrase):
 	# Recognize medications patient is currently using
@@ -179,20 +223,29 @@ def Medications_Parse(phrase):
 	Meds = 'Medication'
 	compound_flag = 0
 
-	for count, token in enumerate(doc):
-		if count >= 1:
-			if doc[count -1].dep_ == 'compund' or doc[count -1].dep_ == 'nummound':
-				word = str(doc[count -1]) + " " + str(token)
-				compound_flag = 1
-			else:
-				compound_flag = 0
+	keywords = []
 
-		if token.dep_ == 'dobj':
-			Meds = word if compound_flag == 1 else token
-		if token.dep_ == 'pobj' and doc[count - 1].dep_ == 'prep':
-			Meds = word if compound_flag == 1 else token
+	for token in doc:
+		if not token.is_stop:
+			if token.dep_ == 'dobj' or token.dep_ == 'pobj':
+				keywords.append(token.text)
 
-	return str(Meds)
+	return keywords
+
+	# for count, token in enumerate(doc):
+	# 	if count >= 1:
+	# 		if doc[count -1].dep_ == 'compund' or doc[count -1].dep_ == 'nummound':
+	# 			word = str(doc[count -1]) + " " + str(token)
+	# 			compound_flag = 1
+	# 		else:
+	# 			compound_flag = 0
+	#
+	# 	if token.dep_ == 'dobj':
+	# 		Meds = word if compound_flag == 1 else token
+	# 	if token.dep_ == 'pobj' and doc[count - 1].dep_ == 'prep':
+	# 		Meds = word if compound_flag == 1 else token
+	#
+	# return str(Meds)
 
 def PatientInstructions_Parse(phrase):
 	# Just pass whole sentence
@@ -206,8 +259,9 @@ def PhysicalExam_Parse(phrase):
 	keywords = []
 
 	for chunk in (phrase.noun_chunks):
-		if chunk.root.dep_ == 'dobj' or chunk.root.dep_ == 'pobj':
-			keywords.append(chunk.text)
+		if not token.is_stop:
+			if chunk.root.dep_ == 'dobj' or chunk.root.dep_ == 'pobj':
+				keywords.append(chunk.text)
 
 	return keywords
 
@@ -224,20 +278,29 @@ def Plan_Parse(phrase):
 	PhysExam = 'Physical Exam'
 	compound_flag = 0
 
-	for count, token in enumerate(doc):
-		if count >= 1:
-			if doc[count -1].dep_ == 'compund' or doc[count -1].dep_ == 'nummound':
-				word = str(doc[count -1]) + " " + str(token)
-				compound_flag = 1
-			else:
-				compound_flag = 0
+	keywords = []
 
-		if token.dep_ == 'dobj':
-			PhysExam = word if compound_flag == 1 else token
-		if token.dep_ == 'pobj' and doc[count - 1].dep_ == 'prep':
-			PhysExam = word if compound_flag == 1 else token
+	for token in doc:
+		if not token.is_stop:
+			if token.dep_ == 'dobj' or token.dep_ == 'pobj':
+				keywords.append(token.text)
 
-	return str(PhysExam)
+	return keywords
+
+	# for count, token in enumerate(doc):
+	# 	if count >= 1:
+	# 		if doc[count -1].dep_ == 'compund' or doc[count -1].dep_ == 'nummound':
+	# 			word = str(doc[count -1]) + " " + str(token)
+	# 			compound_flag = 1
+	# 		else:
+	# 			compound_flag = 0
+	#
+	# 	if token.dep_ == 'dobj':
+	# 		PhysExam = word if compound_flag == 1 else token
+	# 	if token.dep_ == 'pobj' and doc[count - 1].dep_ == 'prep':
+	# 		PhysExam = word if compound_flag == 1 else token
+	#
+	# return str(PhysExam)
 
 
 def ReviewOfSystems_Parse(phrase):
@@ -246,11 +309,15 @@ def ReviewOfSystems_Parse(phrase):
 
 	keywords = []
 
-	for chunk in (phrase.noun_chunks):
-		if chunk.root.dep_ == 'dobj' or chunk.root.dep_ == 'pobj':
-			keywords.append(chunk.text)
+	for token in doc:
+		if not token.is_stop:
+			if token.dep_ == 'dobj' or token.dep_ == 'pobj' or token.pos_ == 'ADJ':
+				keywords.append(token.text)
 
 	return keywords
+
+# -------------------------------------------------- #
+
 
 def setup_classifier(training_path):
 	# pass
@@ -333,11 +400,6 @@ if __name__ == '__main__':
 
 	print(classifier)
 
-	# html = displacy.render(doc, style='dep')
-	# f = open('test.html', 'w')
-	# f.write(html)
-	# f.close()
-	#
 
 	while(1):
 
@@ -362,11 +424,11 @@ if __name__ == '__main__':
 
 		doc = nlp(phrase)
 
-		# html = displacy.render(doc, style='dep')
-		# # print(html)
-		# f = open('test.html', 'w')
-		# f.write(html)
-		# f.close()
+		html = displacy.render(doc, style='dep')
+		# print(html)
+		f = open('test.html', 'w')
+		f.write(html)
+		f.close()
 
 
 		print("tokens: ")
@@ -398,8 +460,8 @@ if __name__ == '__main__':
 		category = list_categories[index]
 
 		if category == 'Allergies' :
-			allergen = Allergies_Parse(phrase)
-			print("allergic to: " + allergen)
+			print("Go to Allergies")
+			print(Allergies_Parse(phrase))
 
 		elif category == 'Assessment':
 			print("Go to Assessment")
