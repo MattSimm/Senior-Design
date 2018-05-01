@@ -12,10 +12,12 @@ from pprint import pprint
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 import plac
-import spacy
+import spacy, scipy
+from numpy import ravel
+import numpy as np
 from spacy import displacy
 import en_core_web_sm
-
+from sklearn import svm
 nlp = en_core_web_sm.load()
 
 FAMILY_LIST = ['father', 'mother', 'parent', 'mom', 'dad', 'son', 'daugther',
@@ -78,7 +80,8 @@ def Assessment_Parse(phrase):
 		if not token.is_stop:
 			if token.dep_ == 'dobj' or token.dep_ == 'pobj':
 				keywords.append(token.text)
-
+			elif token.tag_ == 'VBG':
+				keywords.append(token.text)
 	return keywords
 
 	#
@@ -112,7 +115,8 @@ def FamilyHistory_Parse(phrase):
 		if not token.is_stop:
 			if token.dep_ == 'dobj' or token.dep_ == 'pobj' or token.dep_ == 'nsubj':
 				keywords.append(str(token))
-
+			elif token.tag_ == 'VBG':
+				keywords.append(token.text)
 	return keywords
 	# # This is used to see if there is a family member from our list
 
@@ -152,9 +156,12 @@ def HPI_Parse(phrase):
 
 	for token in doc:
 		if not token.is_stop:
-			if token.dep_ == 'dobj' or token.dep_ == 'pobj' or token.pos_ == 'ADJ':
+			if token.dep_ == 'dobj' or token.dep_ == 'pobj' or token.dep_ == 'nsubj':
 				keywords.append(token.text)
-
+			elif token.pos_ == 'ADJ' and token.pos_ == 'NOUN':
+				keywords.append(token.text)
+			elif token.tag_ == 'VBG':
+				keywords.append(token.text)
 	return keywords
 	#
 	# for count, token in enumerate(doc):
@@ -256,12 +263,22 @@ def PatientInstructions_Parse(phrase):
 def PhysicalExam_Parse(phrase):
 	# Recognize terms for conditions that can be identified during physical exam
 	# GOOD PLACE TO PUT IN A LIST OF PHYSCIAL EXAMS
+	# nchunk = list(doc.noun_chunks)
+	# for x in nchunk:
+	# 	print(x)
 	keywords = []
+	doc = nlp(phrase)
 
-	for chunk in (phrase.noun_chunks):
+	nchunk = list(doc.noun_chunks)
+
+	for chunk in nchunk:
+		if chunk.root.dep_ == 'dobj' or chunk.root.dep_ == 'pobj':
+			keywords.append(chunk.text)
+
+	for token in doc:
 		if not token.is_stop:
-			if chunk.root.dep_ == 'dobj' or chunk.root.dep_ == 'pobj':
-				keywords.append(chunk.text)
+			if token.pos_ == 'ADJ':
+				keywords.append(token.text)
 
 	return keywords
 
@@ -313,19 +330,21 @@ def ReviewOfSystems_Parse(phrase):
 		if not token.is_stop:
 			if token.dep_ == 'dobj' or token.dep_ == 'pobj' or token.pos_ == 'ADJ':
 				keywords.append(token.text)
+			elif token.tag_ == 'VBG':
+				keywords.append(token.text)
 
 	return keywords
 
 # -------------------------------------------------- #
 
-
+NUM = 1272
 def setup_classifier(training_path):
 	# pass
 
 # path = '/Users/mattsimmering/SeniorDesign/Senior-Design/dataset'
 	files = sklearn.datasets.load_files(training_path, encoding = 'latin1', decode_error = 'replace', load_content=True, random_state=3)
 
-	count_vect = CountVectorizer(ngram_range=(1,3))
+	count_vect = CountVectorizer(ngram_range=(1,2))
 	#
 	# print("data ")
 	list_categories = (files['target_names'])
@@ -335,20 +354,66 @@ def setup_classifier(training_path):
 	# print("X train counts")
 	# print(X_train_counts[0, 885])
 
-
+	Xo = X_train_counts
 	tfidf_transformer = TfidfTransformer()
 	X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
 
 	clf = MultinomialNB()
+
+	test_svm = svm.LinearSVC()
+
+	svmi = svm.SVC(kernel='linear', probability=True)
 	X = X_train_tfidf
-	# pprint(files.values())
+
 
 	Y = files["target"]
 
 	h = clf.fit(X, Y)
+	hi = svmi.fit(X, Y)
+	h = test_svm.fit(X, Y)
+	print("Support vectors:")
+	print(svmi.n_support_)
+	# print("linearsvc coef")
+	listx = svmi.coef_
+
+	print(listx)
+	# for x in listx:
+	# 	pprint(x)
+	# print(listx)
+	# l = [119,153,363,375,940,1240,1249,1253,1990,2529,2533,2915]
+	y = [77, 84, 214, 217, 547]
+	for x in y:
+		print(x)
+		print((listx[0, x]))
+	# 	print((listx[1, x]))
+	# 	print((listx[2, x]))
+	# 	print((listx[3, x]))
+	# 	print((listx[4, x]))
+	# 	print((listx[5, x]))
+
+	# print("weight for my")
+	# for x in range(0,45):
+	# 	print(x)
+	# 	print((listx[x, 2529]))
+	# print("SVM COEF")
+
+	weight = 0
+	count = 0
+	# for x in range(0, 45):
+	# 	print(svmi.coef_[x, NUM])
+	# 	if(abs(svmi.coef_[x, NUM]) > 0):
+	# 		weight += abs(svmi.coef_[x, NUM])
+	# 		count += 1
+	#
+	# print("average weight:")
+	# print(weight / count)
+
+	print()
 
 
-	return clf, count_vect, list_categories
+
+
+	return svmi, count_vect, list_categories
 
 
 
@@ -365,7 +430,23 @@ def predict_phrase(classifier, vectorizer, phrase):
 
 	X_test_counts = vectorizer.transform([phrase])
 
-	# print(X_test_counts)
+	print("length")
+	# print((vectorizer.vocabulary_))
+	# x = list(vectorizer.vocabulary_.values())
+
+
+	x = [77, 84, 214, 217, 547]
+
+	for num in x:
+		print(num)
+		print(list(vectorizer.vocabulary_.keys())[list(vectorizer.vocabulary_.values()).index(num)])
+
+	#
+	# pprint(X_test_counts)
+	# # print(len(X_test_counts.toarray()[0]))
+	# # Length is 3817
+	#
+	print(X_test_counts[0])
 
 	predicted = classifier.predict_proba(X_test_counts)
 
